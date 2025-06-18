@@ -120,10 +120,6 @@ async def evento_automatico(context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-{testo}",
-        parse_mode="Markdown"
-    )
-
 def main():
     logging.basicConfig(level=logging.INFO)
     carica_stato()
