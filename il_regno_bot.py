@@ -115,11 +115,10 @@ async def evento_automatico(context: ContextTypes.DEFAULT_TYPE):
     salva_stato()
     await context.bot.send_message(
         chat_id=GROUP_CHAT_ID,
-        text=f"📜 *Evento automatico: {evento.title()}*\n\n{descrizione}",
+        text=f"📜 *Evento automatico: {evento.title()}*\n\n{testo}",
         parse_mode="Markdown"
     )
-        chat_id=GROUP_CHAT_ID,
-        text=f"📜 *Evento automatico: {evento.title()}*
+
 
 {testo}",
         parse_mode="Markdown"
