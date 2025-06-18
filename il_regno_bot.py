@@ -104,6 +104,16 @@ async def discorso(update: Update, context: ContextTypes.DEFAULT_TYPE):
     salva_stato()
     await update.message.reply_markdown(f"🎙 *Discorso:*\n\n{testo}")
 
+from telegram import Chat
+from telegram.ext import MessageHandler, filters
+
+async def rileva_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat: Chat = update.effective_chat
+    if chat.type in ["group", "supergroup"]:
+        await update.message.reply_text(
+            f"🤖 Chat ID rilevato: `{chat.id}`",
+            parse_mode="Markdown"
+        )
 
 async def evento_automatico(context: ContextTypes.DEFAULT_TYPE):
     evento = random.choice(["guerra", "carestia", "festa", "miracolo"])
@@ -130,6 +140,9 @@ def main():
     app.add_handler(CommandHandler("nomina_re", nomina_re))
     app.add_handler(CommandHandler("nomina_regina", nomina_regina))
     app.add_handler(CommandHandler("chi_comanda", chi_comanda))
+
+app.add_handler(MessageHandler(filters.ALL, rileva_chat))
+
     
     job_queue: JobQueue = app.job_queue
     job_queue.run_repeating(evento_automatico, interval=900, first=30)
