@@ -1,0 +1,20 @@
+# Ambiente virtuale
+venv/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# File locali di sistema (macOS)
+.DS_Store
+__MACOSX/
+._*
+
+# File di stato del regno o runtime
+regno.json
+*.log
+
+# File editor temporanei
+*.swp
+*.bak
