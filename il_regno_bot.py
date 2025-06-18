@@ -130,10 +130,9 @@ def main():
     app.add_handler(CommandHandler("nomina_re", nomina_re))
     app.add_handler(CommandHandler("nomina_regina", nomina_regina))
     app.add_handler(CommandHandler("chi_comanda", chi_comanda))
+    
     job_queue: JobQueue = app.job_queue
-    job_queue.run_repeating(evento_automatico, interval=900, first=30, chat_id=GROUP_CHAT_ID)
+    job_queue.run_repeating(evento_automatico, interval=900, first=30)
+    
     print("🤖 Il Regno è attivo.")
     app.run_polling()
-
-if __name__ == "__main__":
-    main()
