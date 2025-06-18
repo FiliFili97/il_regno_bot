@@ -128,18 +128,15 @@ async def evento_automatico(context: ContextTypes.DEFAULT_TYPE):
         text=f"📜 *Evento automatico: {evento.title()}*\n\n{testo}",
         parse_mode="Markdown"
     )
-
-
 def main():
+    print("✅ Entrato in main()", flush=True)
 
-print("✅ Entrato in main()", flush=True)
-app = ApplicationBuilder().token(TOKEN).build()
-print("✅ Costruita l'applicazione Telegram", flush=True)
-
-    
     logging.basicConfig(level=logging.INFO)
     carica_stato()
+    
     app = ApplicationBuilder().token(TOKEN).build()
+    print("✅ Costruita l'applicazione Telegram", flush=True)
+
     app.add_handler(CommandHandler("statistiche", statistiche))
     app.add_handler(CommandHandler("tasse", tasse))
     app.add_handler(CommandHandler("discorso", discorso))
@@ -154,3 +151,4 @@ print("✅ Costruita l'applicazione Telegram", flush=True)
     print("🤖 Il Regno è attivo.", flush=True)
 
     app.run_polling()
+
