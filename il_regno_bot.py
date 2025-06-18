@@ -128,6 +128,7 @@ async def evento_automatico(context: ContextTypes.DEFAULT_TYPE):
         text=f"📜 *Evento automatico: {evento.title()}*\n\n{testo}",
         parse_mode="Markdown"
     )
+
 def main():
     print("✅ Entrato in main()", flush=True)
 
