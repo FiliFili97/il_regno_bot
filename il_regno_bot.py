@@ -104,7 +104,6 @@ async def discorso(update: Update, context: ContextTypes.DEFAULT_TYPE):
     salva_stato()
     await update.message.reply_markdown(f"🎙 *Discorso:*\n\n{testo}")
 
-{testo}")
 
 async def evento_automatico(context: ContextTypes.DEFAULT_TYPE):
     evento = random.choice(["guerra", "carestia", "festa", "miracolo"])
