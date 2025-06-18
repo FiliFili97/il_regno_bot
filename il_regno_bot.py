@@ -35,16 +35,27 @@ def carica_stato():
     if os.path.exists(STATE_FILE):
         with open(STATE_FILE, "r") as f:
             regno = json.load(f)
+
 def chiedi_a_deepseek(prompt):
     try:
         res = requests.post(
-            "https://api.deepseek.com/generate",
-            headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}"},
-            json={"prompt": prompt, "max_tokens": 150}
+            "https://api.deepseek.com/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "deepseek-chat",
+                "messages": [
+                    {"role": "user", "content": prompt}
+                ],
+                "temperature": 0.7,
+                "max_tokens": 300
+            }
         )
-        return res.json().get("text", "[Errore risposta DeepSeek]")
-    except:
-        return "[Errore DeepSeek]"
+        return res.json().get("choices", [{}])[0].get("message", {}).get("content", "[Errore risposta DeepSeek]")
+    except Exception as e:
+        return f"[Errore DeepSeek: {e}]"
 
 def is_sovrano(user_id):
     return user_id == regno["re"]["id"] or user_id == regno["regina"]["id"]
