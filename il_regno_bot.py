@@ -120,14 +120,15 @@ async def evento_automatico(context: ContextTypes.DEFAULT_TYPE):
     impatto = random.randint(-20, 20)
     regno["soddisfazione"] = max(1, min(100, regno["soddisfazione"] + impatto))
     prompt = f"Scrivi un evento medievale di tipo {evento}. Soddisfazione: {regno['soddisfazione']}."
-    testo = chiedi_a_deepseek(prompt)
+    testo = chiedi_a_deepseek(prompt)  # ✅ testo generato
     regno["eventi"].append(f"{evento} (auto)")
     salva_stato()
     await context.bot.send_message(
         chat_id=GROUP_CHAT_ID,
-        text=f"📜 *Evento automatico: {evento.title()}*\n\n{testo}",
+        text=f"📜 *Evento automatico: {evento.title()}*\n\n{testo}",  # ✅ lo usi qui
         parse_mode="Markdown"
     )
+
 
 def main():
     print("✅ Entrato in main()", flush=True)
