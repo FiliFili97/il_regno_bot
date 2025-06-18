@@ -131,6 +131,12 @@ async def evento_automatico(context: ContextTypes.DEFAULT_TYPE):
 
 
 def main():
+
+print("✅ Entrato in main()", flush=True)
+app = ApplicationBuilder().token(TOKEN).build()
+print("✅ Costruita l'applicazione Telegram", flush=True)
+
+    
     logging.basicConfig(level=logging.INFO)
     carica_stato()
     app = ApplicationBuilder().token(TOKEN).build()
@@ -145,5 +151,6 @@ def main():
     job_queue: JobQueue = app.job_queue
     job_queue.run_repeating(evento_automatico, interval=900, first=30)
 
-    print("🤖 Il Regno è attivo.")
+    print("🤖 Il Regno è attivo.", flush=True)
+
     app.run_polling()
