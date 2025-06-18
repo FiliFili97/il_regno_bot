@@ -5,7 +5,7 @@ import random
 import asyncio
 import requests
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler, JobQueue
+from telegram.ext import( ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler, JobQueue
 
 )
 
