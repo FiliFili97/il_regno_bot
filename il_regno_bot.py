@@ -35,14 +35,9 @@ def carica_stato():
     if os.path.exists(STATE_FILE):
         with open(STATE_FILE, "r") as f:
             regno = json.load(f)
-
 def chiedi_a_deepseek(prompt):
     try:
         res = requests.post(
-            "https://api.deepseek.com/generate",
-            headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}"},
-            json={"prompt": prompt, "max_tokens": 150}
-        )
             "https://api.deepseek.com/generate",
             headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}"},
             json={"prompt": prompt, "max_tokens": 150}
