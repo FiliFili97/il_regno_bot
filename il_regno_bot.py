@@ -73,14 +73,6 @@ async def statistiche(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"💰 Oro: {regno['oro']}\n"
         f"📈 Tasse: {regno['tasse']}%\n"
         f"🧍‍♂️ Popolazione: {regno['popolazione']}\n"
-        f"🏗 Costruzioni: {", ".join(regno['costruzioni']) or 'Nessuna'}\n"
-        f"⚔️ Eventi recenti: {", ".join(regno['eventi'][-3:]) or 'Nessuno'}"
-    )
-        f"📊 *Statistiche del Regno*\n"
-        f"👑 Soddisfazione: {regno['soddisfazione']}/100\n"
-        f"💰 Oro: {regno['oro']}\n"
-        f"📈 Tasse: {regno['tasse']}%\n"
-        f"🧍‍♂️ Popolazione: {regno['popolazione']}\n"
         f"🏗 Costruzioni: {', '.join(regno['costruzioni']) or 'Nessuna'}\n"
         f"⚔️ Eventi recenti: {', '.join(regno['eventi'][-3:]) or 'Nessuno'}"
     )
