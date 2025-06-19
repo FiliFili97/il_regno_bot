@@ -9,7 +9,7 @@ from telegram.ext import( ApplicationBuilder, CommandHandler, ContextTypes, Call
 
 )
 
-from config import TOKEN, DEEPSEEK_API_KEY, GROUP_CHAT_ID
+from config import TOKEN, GEMINI_API_KEY, GROUP_CHAT_ID
 
 STATE_FILE = "regno.json"
 EVENTI_POSSIBILI = ["carestia", "guerra", "festa", "epidemia", "miracolo"]
@@ -35,29 +35,32 @@ def carica_stato():
     if os.path.exists(STATE_FILE):
         with open(STATE_FILE, "r") as f:
             regno = json.load(f)
-def chiedi_a_deepseek(prompt):
+
+def chiedi_a_gemini(prompt):
     try:
-        res = requests.post(
-            "https://api.deepseek.com/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
-                "Content-Type": "application/json"
-            },
-            json={
-                "model": "deepseek-chat",
-                "messages": [{"role": "user", "content": prompt}],
-                "temperature": 0.7,
-                "max_tokens": 300
-            }
-        )
+        url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
+        headers = {
+            "Content-Type": "application/json"
+        }
+        params = {
+            "key": GEMINI_API_KEY
+        }
+        body = {
+            "contents": [{
+                "parts": [{"text": prompt}]
+            }]
+        }
 
-        print("✅ DeepSeek status:", res.status_code, flush=True)
-        print("📦 DeepSeek response:", res.text, flush=True)
+        res = requests.post(url, headers=headers, params=params, json=body)
+        res.raise_for_status()
+        data = res.json()
 
-        return res.json().get("choices", [{}])[0].get("message", {}).get("content", "[Errore risposta DeepSeek]")
+        return data["candidates"][0]["content"]["parts"][0]["text"]
+
     except Exception as e:
-        print("❌ DeepSeek Exception:", e, flush=True)
-        return f"[Errore DeepSeek: {e}]"
+        print("❌ Errore Gemini:", e, flush=True)
+        return f"[Errore Gemini: {e}]"
+
 
 
 def is_sovrano(user_id):
@@ -113,7 +116,7 @@ async def discorso(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     mood = "felice" if regno["soddisfazione"] >= 70 else "neutrale" if regno["soddisfazione"] >= 40 else "rivolta"
     prompt = f"Scrivi un discorso regale in un regno medievale. La soddisfazione è {regno['soddisfazione']} ({mood})."
-    testo = chiedi_a_deepseek(prompt)
+    testo = chiedi_a_gemini(prompt)
     regno["discorsi"].append(testo)
     salva_stato()
     await update.message.reply_markdown(f"🎙 *Discorso:*\n\n{testo}")
@@ -134,7 +137,7 @@ async def evento_automatico(context: ContextTypes.DEFAULT_TYPE):
     impatto = random.randint(-20, 20)
     regno["soddisfazione"] = max(1, min(100, regno["soddisfazione"] + impatto))
     prompt = f"Scrivi un evento medievale di tipo {evento}. Soddisfazione: {regno['soddisfazione']}."
-    testo = chiedi_a_deepseek(prompt)  # ✅ testo generato
+    testo = chiedi_a_gemini(prompt) # ✅ testo generato
     regno["eventi"].append(f"{evento} (auto)")
     salva_stato()
     await context.bot.send_message(
