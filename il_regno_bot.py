@@ -38,7 +38,7 @@ def carica_stato():
 
 def chiedi_a_gemini(prompt):
     try:
-        url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
+        url = "https://generativelanguage.googleapis.com/v1beta/models/gemma-1.5-7b-it:generateContent"
         headers = {
             "Content-Type": "application/json"
         }
