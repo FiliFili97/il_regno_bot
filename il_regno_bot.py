@@ -159,6 +159,7 @@ async def imposta_comandi(bot):
         ("nomina_regina", "Nomina una Regina"),
         ("chi_comanda", "Chi comanda nel Regno"),
         ("help", "Mostra l'elenco dei comandi")
+        ])
 
 def main():
     print("✅ Entrato in main()", flush=True)
@@ -167,8 +168,6 @@ def main():
     carica_stato()
     
     app = ApplicationBuilder().token(TOKEN).build()
-    
-    ])
     
     asyncio.run(imposta_comandi(app.bot))
 
