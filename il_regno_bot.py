@@ -103,7 +103,7 @@ async def discorso(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Solo il Re o la Regina possono fare discorsi.")
         return
     mood = "felice" if regno["soddisfazione"] >= 70 else "neutrale" if regno["soddisfazione"] >= 40 else "rivolta"
-    prompt = f"Scrivi un discorso regale in un regno medievale. La soddisfazione è {regno['soddisfazione']} ({mood})."
+    prompt = f"Genera direttamente un discorso regale ambientato in un regno medievale, senza introduzioni o saluti. La soddisfazione è {regno['soddisfazione']} ({mood})."
     testo = chiedi_a_gemini(prompt)
     regno["discorsi"].append(testo)
     salva_stato()
@@ -124,7 +124,7 @@ async def evento_automatico(context: ContextTypes.DEFAULT_TYPE):
     evento = random.choice(["guerra", "carestia", "festa", "miracolo"])
     impatto = random.randint(-20, 20)
     regno["soddisfazione"] = max(1, min(100, regno["soddisfazione"] + impatto))
-    prompt = f"Scrivi un evento medievale di tipo {evento}. Soddisfazione: {regno['soddisfazione']}."
+    prompt = f"Scrivi solo l'evento medievale di tipo {evento}, senza introduzioni o conclusioni. Soddisfazione: {regno['soddisfazione']}."
     testo = chiedi_a_gemini(prompt) # ✅ testo generato
     regno["eventi"].append(f"{evento} (auto)")
     salva_stato()
@@ -133,6 +133,18 @@ async def evento_automatico(context: ContextTypes.DEFAULT_TYPE):
         text=f"📜 *Evento automatico: {evento.title()}*\n\n{testo}",  # ✅ lo usi qui
         parse_mode="Markdown"
     )
+
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    help_text = (
+        "/statistiche - Mostra le statistiche del Regno\n"
+        "/tasse - Modifica le tasse\n"
+        "/discorso - Fai un discorso regale\n"
+        "/nomina_re - Nomina un Re\n"
+        "/nomina_regina - Nomina una Regina\n"
+        "/chi_comanda - Mostra Re e Regina\n"
+        "/help - Mostra questo messaggio"
+    )
+    await update.message.reply_text(help_text)
 
 
 def main():
@@ -151,7 +163,9 @@ def main():
     app.add_handler(CommandHandler("nomina_regina", nomina_regina))
     app.add_handler(CommandHandler("chi_comanda", chi_comanda))
     app.add_handler(MessageHandler(filters.ALL, rileva_chat))
+    app.add_handler(CommandHandler("help", help_command))
 
+    
     job_queue: JobQueue = app.job_queue
     job_queue.run_repeating(evento_automatico, interval=900, first=30)
 
