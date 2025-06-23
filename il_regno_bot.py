@@ -10,6 +10,9 @@ from telegram.ext import( ApplicationBuilder, CommandHandler, ContextTypes, Call
 )
 
 from config import TOKEN, GEMINI_API_KEY, GROUP_CHAT_ID
+import google.generativeai as genai
+genai.configure(api_key=GEMINI_API_KEY)
+
 
 STATE_FILE = "regno.json"
 EVENTI_POSSIBILI = ["carestia", "guerra", "festa", "epidemia", "miracolo"]
