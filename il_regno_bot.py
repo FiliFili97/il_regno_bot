@@ -56,38 +56,68 @@ def is_sovrano(user_id):
     return user_id == regno["re"]["id"] or user_id == regno["regina"]["id"]
 
 async def nomina_re(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not context.args:
-        await update.message.reply_text("❗ Usa il comando così: /nomina_re @nomeutente")
-        return
-
-    username = context.args[0].lstrip("@")
     chat = update.effective_chat
 
-    try:
-        member = await context.bot.get_chat_member(chat.id, username)
-        regno["regina"] = {"id": member.user.id, "nome": member.user.full_name}
+    # ✅ 1. Se rispondi a un messaggio
+    if update.message.reply_to_message:
+        user = update.message.reply_to_message.from_user
+        regno["re"] = {"id": user.id, "nome": user.full_name}
         salva_stato()
-        await update.message.reply_text(f"👑 {member.user.full_name} è stata nominato Re!")
-    except Exception as e:
-        await update.message.reply_text("❌ Impossibile trovare l'utente. Assicurati che sia nel gruppo.")
-        print(f"Errore nella nomina_re: {e}", flush=True)
+        await update.message.reply_text(f"👑 {user.full_name} è stato nominato Re!")
+        return
+
+    # ✅ 2. Se usi @username
+    if context.args:
+        username = context.args[0].lstrip("@").lower()
+        try:
+            members = await context.bot.get_chat_administrators(chat.id)  # oppure get_chat_member se vuoi includere tutti
+            for m in members:
+                if m.user.username and m.user.username.lower() == username:
+                    regno["re"] = {"id": m.user.id, "nome": m.user.full_name}
+                    salva_stato()
+                    await update.message.reply_text(f"👑 {user.full_name} è stato nominato Re!")
+                    return
+            await update.message.reply_text("❌ Utente non trovato nel gruppo.")
+        except Exception as e:
+            await update.message.reply_text("❌ Errore durante la nomina.")
+            print(f"Errore nomina_re: {e}", flush=True)
+        return
+
+    # ⛔ Nessun argomento e nessuna risposta
+    await update.message.reply_text("❗ Usa il comando rispondendo a un messaggio o scrivi: /nomina_re @username")
+
 
 async def nomina_regina(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not context.args:
-        await update.message.reply_text("❗ Usa il comando così: /nomina_regina @nomeutente")
-        return
-
-    username = context.args[0].lstrip("@")
     chat = update.effective_chat
 
-    try:
-        member = await context.bot.get_chat_member(chat.id, username)
-        regno["regina"] = {"id": member.user.id, "nome": member.user.full_name}
+    # ✅ 1. Se rispondi a un messaggio
+    if update.message.reply_to_message:
+        user = update.message.reply_to_message.from_user
+        regno["regina"] = {"id": user.id, "nome": user.full_name}
         salva_stato()
-        await update.message.reply_text(f"👸 {member.user.full_name} è stata nominata Regina!")
-    except Exception as e:
-        await update.message.reply_text("❌ Impossibile trovare l'utente. Assicurati che sia nel gruppo.")
-        print(f"Errore nella nomina_regina: {e}", flush=True)
+        await update.message.reply_text(f"👸 {user.full_name} è stata nominata Regina!")
+        return
+
+    # ✅ 2. Se usi @username
+    if context.args:
+        username = context.args[0].lstrip("@").lower()
+        try:
+            members = await context.bot.get_chat_administrators(chat.id)  # oppure get_chat_member se vuoi includere tutti
+            for m in members:
+                if m.user.username and m.user.username.lower() == username:
+                    regno["regina"] = {"id": m.user.id, "nome": m.user.full_name}
+                    salva_stato()
+                    await update.message.reply_text(f"👸 {m.user.full_name} è stata nominata Regina!")
+                    return
+            await update.message.reply_text("❌ Utente non trovato nel gruppo.")
+        except Exception as e:
+            await update.message.reply_text("❌ Errore durante la nomina.")
+            print(f"Errore nomina_regina: {e}", flush=True)
+        return
+
+    # ⛔ Nessun argomento e nessuna risposta
+    await update.message.reply_text("❗ Usa il comando rispondendo a un messaggio o scrivi: /nomina_regina @username")
+
 
 async def chi_comanda(update: Update, context: ContextTypes.DEFAULT_TYPE):
     re = regno["re"]["nome"] or "Nessuno"
