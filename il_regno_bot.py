@@ -50,8 +50,6 @@ def chiedi_a_gemini(prompt):
         return f"[Errore risposta Gemini: {e}]"
 
 
-
-
 def is_sovrano(user_id):
     return user_id == regno["re"]["id"] or user_id == regno["regina"]["id"]
 
@@ -67,7 +65,7 @@ async def nomina_re(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     # ✅ 2. Se usi @username
-   if context.args:
+    if context.args:
         username = context.args[0].lstrip("@").lower()
         try:
             members = await context.bot.get_chat_administrators(chat.id)
