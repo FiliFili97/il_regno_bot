@@ -150,6 +150,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(help_text)
 
 import asyncio
+
 async def imposta_comandi(bot):
     await bot.set_my_commands([
         ("statistiche", "Mostra le statistiche del Regno"),
@@ -159,17 +160,20 @@ async def imposta_comandi(bot):
         ("nomina_regina", "Nomina una Regina"),
         ("chi_comanda", "Chi comanda nel Regno"),
         ("help", "Mostra l'elenco dei comandi")
-        ])
+    ])
 
 def main():
     print("✅ Entrato in main()", flush=True)
 
     logging.basicConfig(level=logging.INFO)
     carica_stato()
-    
+
     app = ApplicationBuilder().token(TOKEN).build()
-    
-    asyncio.run(imposta_comandi(app.bot))
+
+    async def after_startup(app):
+        await imposta_comandi(app.bot)
+
+    app.post_init(after_startup)
 
     print("✅ Costruita l'applicazione Telegram", flush=True)
 
@@ -179,8 +183,8 @@ def main():
     app.add_handler(CommandHandler("nomina_re", nomina_re))
     app.add_handler(CommandHandler("nomina_regina", nomina_regina))
     app.add_handler(CommandHandler("chi_comanda", chi_comanda))
-    app.add_handler(MessageHandler(filters.ALL, rileva_chat))
     app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(MessageHandler(filters.ALL, rileva_chat))
 
     job_queue: JobQueue = app.job_queue
     job_queue.run_repeating(evento_automatico, interval=900, first=30)
