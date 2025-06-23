@@ -10,6 +10,7 @@ from telegram.ext import( ApplicationBuilder, CommandHandler, ContextTypes, Call
 )
 
 from config import TOKEN, GEMINI_API_KEY, GROUP_CHAT_ID
+GROUP_CHAT_ID = None
 import google.generativeai as genai
 genai.configure(api_key=GEMINI_API_KEY)
 
@@ -112,13 +113,15 @@ async def discorso(update: Update, context: ContextTypes.DEFAULT_TYPE):
 from telegram import Chat
 from telegram.ext import MessageHandler, filters
 
+chat_id_rilevato = False
+
 async def rileva_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat: Chat = update.effective_chat
-    if chat.type in ["group", "supergroup"]:
-        await update.message.reply_text(
-            f"🤖 Chat ID rilevato: `{chat.id}`",
-            parse_mode="Markdown"
-        )
+    global GROUP_CHAT_ID, chat_id_rilevato
+
+    if not chat_id_rilevato:
+        GROUP_CHAT_ID = update.effective_chat.id
+        print(f"Chat ID Rilevato: {GROUP_CHAT_ID}", flush=True)
+        chat_id_rilevato = True
 
 async def evento_automatico(context: ContextTypes.DEFAULT_TYPE):
     evento = random.choice(["guerra", "carestia", "festa", "miracolo"])
