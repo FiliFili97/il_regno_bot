@@ -41,28 +41,13 @@ def carica_stato():
 
 def chiedi_a_gemini(prompt):
     try:
-        url = "https://generativelanguage.googleapis.com/v1beta/models/gemma-1.5-7b-it:generateContent"
-        headers = {
-            "Content-Type": "application/json"
-        }
-        params = {
-            "key": GEMINI_API_KEY
-        }
-        body = {
-            "contents": [{
-                "parts": [{"text": prompt}]
-            }]
-        }
-
-        res = requests.post(url, headers=headers, params=params, json=body)
-        res.raise_for_status()
-        data = res.json()
-
-        return data["candidates"][0]["content"]["parts"][0]["text"]
-
+        model = genai.GenerativeModel("gemma-3-27b-it")
+        response = model.generate_content(prompt)
+        return response.text
     except Exception as e:
         print("❌ Errore Gemini:", e, flush=True)
-        return f"[Errore Gemini: {e}]"
+        return f"[Errore risposta Gemini: {e}]"
+
 
 
 
