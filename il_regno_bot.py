@@ -149,10 +149,8 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     await update.message.reply_text(help_text)
 
-import asyncio
-
-async def imposta_comandi(bot):
-    await bot.set_my_commands([
+async def imposta_comandi(app):
+    await app.bot.set_my_commands([
         ("statistiche", "Mostra le statistiche del Regno"),
         ("tasse", "Modifica le tasse"),
         ("discorso", "Fai un discorso regale"),
@@ -168,12 +166,7 @@ def main():
     logging.basicConfig(level=logging.INFO)
     carica_stato()
 
-    app = ApplicationBuilder().token(TOKEN).build()
-
-    async def after_startup(app):
-        await imposta_comandi(app.bot)
-
-    app.post_init(after_startup)
+    app = ApplicationBuilder().token(TOKEN).post_init(imposta_comandi).build()  # ✅ QUI
 
     print("✅ Costruita l'applicazione Telegram", flush=True)
 
@@ -195,4 +188,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
