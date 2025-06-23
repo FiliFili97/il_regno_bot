@@ -67,22 +67,22 @@ async def nomina_re(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     # ✅ 2. Se usi @username
-    if context.args:
+   if context.args:
         username = context.args[0].lstrip("@").lower()
         try:
-            members = await context.bot.get_chat_administrators(chat.id)  # oppure get_chat_member se vuoi includere tutti
+            members = await context.bot.get_chat_administrators(chat.id)
             for m in members:
                 if m.user.username and m.user.username.lower() == username:
                     regno["re"] = {"id": m.user.id, "nome": m.user.full_name}
                     salva_stato()
-                    await update.message.reply_text(f"👑 {user.full_name} è stato nominato Re!")
+                    await update.message.reply_text(f"🤴 {m.user.full_name} è stato nominato Re!")
                     return
             await update.message.reply_text("❌ Utente non trovato nel gruppo.")
         except Exception as e:
             await update.message.reply_text("❌ Errore durante la nomina.")
             print(f"Errore nomina_re: {e}", flush=True)
         return
-
+       
     # ⛔ Nessun argomento e nessuna risposta
     await update.message.reply_text("❗ Usa il comando rispondendo a un messaggio o scrivi: /nomina_re @username")
 
@@ -102,7 +102,7 @@ async def nomina_regina(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if context.args:
         username = context.args[0].lstrip("@").lower()
         try:
-            members = await context.bot.get_chat_administrators(chat.id)  # oppure get_chat_member se vuoi includere tutti
+            members = await context.bot.get_chat_administrators(chat.id)
             for m in members:
                 if m.user.username and m.user.username.lower() == username:
                     regno["regina"] = {"id": m.user.id, "nome": m.user.full_name}
@@ -114,7 +114,7 @@ async def nomina_regina(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("❌ Errore durante la nomina.")
             print(f"Errore nomina_regina: {e}", flush=True)
         return
-
+        
     # ⛔ Nessun argomento e nessuna risposta
     await update.message.reply_text("❗ Usa il comando rispondendo a un messaggio o scrivi: /nomina_regina @username")
 
