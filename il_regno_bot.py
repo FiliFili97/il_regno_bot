@@ -149,17 +149,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     await update.message.reply_text(help_text)
 
-
-
-def main():
-    print("✅ Entrato in main()", flush=True)
-
-    logging.basicConfig(level=logging.INFO)
-    carica_stato()
-    
-    app = ApplicationBuilder().token(TOKEN).build()
-    import asyncio
-
+import asyncio
 async def imposta_comandi(bot):
     await bot.set_my_commands([
         ("statistiche", "Mostra le statistiche del Regno"),
@@ -169,6 +159,15 @@ async def imposta_comandi(bot):
         ("nomina_regina", "Nomina una Regina"),
         ("chi_comanda", "Chi comanda nel Regno"),
         ("help", "Mostra l'elenco dei comandi")
+
+def main():
+    print("✅ Entrato in main()", flush=True)
+
+    logging.basicConfig(level=logging.INFO)
+    carica_stato()
+    
+    app = ApplicationBuilder().token(TOKEN).build()
+    
     ])
     
     asyncio.run(imposta_comandi(app.bot))
