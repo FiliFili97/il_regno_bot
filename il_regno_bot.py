@@ -150,6 +150,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(help_text)
 
 
+
 def main():
     print("✅ Entrato in main()", flush=True)
 
@@ -157,6 +158,21 @@ def main():
     carica_stato()
     
     app = ApplicationBuilder().token(TOKEN).build()
+    import asyncio
+
+async def imposta_comandi(bot):
+    await bot.set_my_commands([
+        ("statistiche", "Mostra le statistiche del Regno"),
+        ("tasse", "Modifica le tasse"),
+        ("discorso", "Fai un discorso regale"),
+        ("nomina_re", "Nomina un Re"),
+        ("nomina_regina", "Nomina una Regina"),
+        ("chi_comanda", "Chi comanda nel Regno"),
+        ("help", "Mostra l'elenco dei comandi")
+    ])
+    
+asyncio.run(imposta_comandi(app.bot))
+
     print("✅ Costruita l'applicazione Telegram", flush=True)
 
     app.add_handler(CommandHandler("statistiche", statistiche))
