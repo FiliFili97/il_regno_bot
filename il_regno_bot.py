@@ -56,16 +56,38 @@ def is_sovrano(user_id):
     return user_id == regno["re"]["id"] or user_id == regno["regina"]["id"]
 
 async def nomina_re(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user = update.effective_user
-    regno["re"] = {"id": user.id, "nome": user.full_name}
-    salva_stato()
-    await update.message.reply_text(f"👑 {user.full_name} è stato nominato Re!")
+    if not context.args:
+        await update.message.reply_text("❗ Usa il comando così: /nomina_re @nomeutente")
+        return
+
+    username = context.args[0].lstrip("@")
+    chat = update.effective_chat
+
+    try:
+        member = await context.bot.get_chat_member(chat.id, username)
+        regno["regina"] = {"id": member.user.id, "nome": member.user.full_name}
+        salva_stato()
+        await update.message.reply_text(f"👑 {member.user.full_name} è stata nominato Re!")
+    except Exception as e:
+        await update.message.reply_text("❌ Impossibile trovare l'utente. Assicurati che sia nel gruppo.")
+        print(f"Errore nella nomina_re: {e}", flush=True)
 
 async def nomina_regina(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user = update.effective_user
-    regno["regina"] = {"id": user.id, "nome": user.full_name}
-    salva_stato()
-    await update.message.reply_text(f"👸 {user.full_name} è stata nominata Regina!")
+    if not context.args:
+        await update.message.reply_text("❗ Usa il comando così: /nomina_regina @nomeutente")
+        return
+
+    username = context.args[0].lstrip("@")
+    chat = update.effective_chat
+
+    try:
+        member = await context.bot.get_chat_member(chat.id, username)
+        regno["regina"] = {"id": member.user.id, "nome": member.user.full_name}
+        salva_stato()
+        await update.message.reply_text(f"👸 {member.user.full_name} è stata nominata Regina!")
+    except Exception as e:
+        await update.message.reply_text("❌ Impossibile trovare l'utente. Assicurati che sia nel gruppo.")
+        print(f"Errore nella nomina_regina: {e}", flush=True)
 
 async def chi_comanda(update: Update, context: ContextTypes.DEFAULT_TYPE):
     re = regno["re"]["nome"] or "Nessuno"
