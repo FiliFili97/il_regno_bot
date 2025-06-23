@@ -171,7 +171,7 @@ async def imposta_comandi(bot):
         ("help", "Mostra l'elenco dei comandi")
     ])
     
-asyncio.run(imposta_comandi(app.bot))
+    asyncio.run(imposta_comandi(app.bot))
 
     print("✅ Costruita l'applicazione Telegram", flush=True)
 
@@ -184,7 +184,6 @@ asyncio.run(imposta_comandi(app.bot))
     app.add_handler(MessageHandler(filters.ALL, rileva_chat))
     app.add_handler(CommandHandler("help", help_command))
 
-    
     job_queue: JobQueue = app.job_queue
     job_queue.run_repeating(evento_automatico, interval=900, first=30)
 
